@@ -1,27 +1,16 @@
 from datetime import datetime
+from tkinter import image_names
+from webbrowser import get
 
 from django.http import HttpResponse
 from django.shortcuts import render
 from myact.models import Activities
+from myact import models
 
 
 # Create your views here.
-#def index(request):
-    #ob =Users()
-    #ob.name = "jj"
-    #ob.phone = "110"
-    #ob.detail="is super cleverpy
-    #ob.save()
-    # delete
-    #mod =Users.objects
-    #user=mod.get(id=3)
-    #print(user.name)
-   # mod=Users.objects
-   # ulist=mod.all()
-    #for u in ulist:
-    #    print (u.name)
+from django.core.files.base import ContentFile
 
-   # return HttpResponse("首页")
 def index(request):
    # mod = Users2.all()
     #ulist = mod.order_by("id")  # 按age升序排序,只获取前3条
@@ -64,21 +53,19 @@ def addActs(request):
     return render(request,"myact/addAct.html")
 #执行用户信息添加
 def insertActs(request):
-    #try:
-        ob=Activities()
-        ob.name = request.POST['name']
-        ob.topic = request.POST['topic']
-        ob.phone = request.POST['phone']
-        print(3)
-        ob.details = request.POST['detail']
-        print(4)
-        ob.img_url= request.POST['img']
-        print(5)
-        ob.save()  # 执行保存
-        print(6)
+    if request.method == 'POST':
+        new_message = models.Activities(
+            name = request.POST.get('name'),
+            topic = request.POST.get('topic'),
+            phone = request.POST.get('phone'),
+            details = request.POST.get('detail'),
+
+            image=request.FILES.get('photo'),
+            image_name=request.FILES.get('photo').name
+
+        )
+        new_message.save()
         context = {"info": "添加成功！"}
-    #except:
-     #   context = {"info": "添加失败！"}
         return render(request,"myact/info.html",context)
 
 #执行用户信息删除
@@ -102,3 +89,15 @@ def uploadImg(request):
     #    img.save()
     return render(request,'imgupload.html')
 #会员登陆表单
+
+#mtc_create
+#def updateinfo(request):
+#    if request.method == 'POST':
+#        new_img = models.mypicture(
+#            photo=request.FILES.get('photo'),  # 拿到图片
+#            user=request.FILES.get('photo').name # 拿到图片的名字
+#        )
+#        new_img.save()  # 保存图片
+#        return HttpResponse('上传成功！')  
+
+#    return render(request, 'aaa.html')

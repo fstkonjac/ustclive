@@ -18,3 +18,8 @@ class User(models.Model):
 
     class Meta:
         db_table = "user"  # 更改表名
+class Test(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='logo')
+    def __str__(self):
+        return self.name

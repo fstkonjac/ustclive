@@ -91,7 +91,7 @@
     </div>
       <center>
       <a href="{% url 'indexacts' %}">浏览活动信息</a>
-      <a href="{% url 'addacts' %}">添加活动信息</a>
+      <a href="{% url 'addacts' %}">添加活动信息</a><!--显示-->
       <hr/>
       </center>
         <section class="ftco-section" >
@@ -100,7 +100,7 @@
                 <div class="row justify-content-center" >
                     <div class="col-md-8" >
                         <div class="author-wrap d-flex" style="border-color:red">
-                            <div class="img" style="background-image: url('{% static "images/person_5.jpg" %}');"></div>
+                            <div class="img" style="background-image: url('../media/{{u.image}}');"></div>
                             <div class="text">
                                 <h3>{{u.topic}}</h3>
                                 <span class="d-block">发起人 {{u.name}} 电话 {{u.phone}}</span>

@@ -94,7 +94,7 @@
       <a href="{% url 'addacts' %}">添加活动信息</a>
       <hr/>
           <h3>添加用户信息</h3>
-        <form action="{% url 'insertacts' %}" method="post">
+        <form action="{% url 'insertacts' %}" method="post" enctype="multipart/form-data"><!--上传-->
             {% csrf_token %}
             <table width="300" border="0">
                <tr>
@@ -111,7 +111,7 @@
                </tr>
               <tr>
                  <td>图片：</td>
-                 <td><input type="file" name="img"></td>
+                 <td><input name="photo" type="file" id="exampleInputFile"></td>
                </tr>
                  <tr>
                      <td>活动详情</td> <td>包括时间地点等信息：</td>

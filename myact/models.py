@@ -1,15 +1,20 @@
 from datetime import datetime
+from email.policy import default
+from tkinter import Image, PhotoImage, image_names
 
 from django.db import models
 
 # Create your models here.
 
 class Activities(models.Model):
-    topic = models.CharField(max_length=32)
-    name = models.CharField(max_length=32)
-    phone = models.IntegerField(default=20)
-    details = models.CharField(max_length=32)
-    img_url = models.ImageField(upload_to='img',default="")
+    topic = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    details = models.CharField(max_length=100)
+#上传图片和图片名字
+    image = models.ImageField(upload_to='media',default='fuckyou.jpg')
+    image_name=models.CharField(max_length=100)
+#
     addtime = models.DateTimeField(default=datetime.now)
     creator = models.IntegerField(default=0)
 
@@ -18,4 +23,4 @@ class Activities(models.Model):
 
     class Meta:
         db_table = "activities"  # 更改表名
-    pic = models.ImageField(upload_to='pic/', verbose_name=u'图片地址')
+    

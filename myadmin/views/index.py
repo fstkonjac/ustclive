@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from myadmin.models import User
@@ -9,6 +10,48 @@ from django.urls import reverse
 def index(request):
     return render(request,'myadmin/index/index.html')
 
+# 账号注册表单
+
+def register(request):
+    return render(request,'myadmin/index/register.html')
+
+# 执行账号注册
+
+def doregister(request):
+    try:
+        # 执行验证码校验
+        if request.POST['code'] != request.session['verifycode']:
+            context = {'info':"验证码错误"}
+            return render(request,"myadmin/index/register.html",context)
+        # 在数据库中查找输入账号
+        user = User.objects.get(username=request.POST['username'])
+        if user.status == 9:
+            raise Exception('DoesNotExist')
+        context = {'info':"账号已存在"}
+        return render(request,"myadmin/index/register.html",context)
+    except Exception as err:
+        print(err)
+        if request.POST['pass'] != request.POST['repass']:
+            context = {'info':"两次输入的密码不一致"}
+            return render(request,"myadmin/index/register.html",context)
+        ob = User()
+        ob.username = request.POST['username']
+        ob.nickname = request.POST['nickname']
+        #获取密码并md5
+        import hashlib,random
+        md5 = hashlib.md5()
+        n = random.randint(100000, 999999)
+        s = request.POST['pass']+str(n) # 从表单中获取密码并添加干扰值
+        md5.update(s.encode('utf-8')) # 放入要产生md5的字串
+        ob.password_hash = md5.hexdigest() # 获取md5值
+        ob.password_salt = n
+        ob.status = 1
+        ob.create_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ob.update_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ob.save()
+        context = {'info':"添加成功！"}
+    return render(request,"myadmin/index/register.html",context)
+
 # 管理员登录表单
 def login(request):
     return render(request,'myadmin/index/login.html')
@@ -16,10 +59,14 @@ def login(request):
 # 执行管理员登录
 def dologin(request):
     try:
+        # 执行验证码校验
+        if request.POST['code'] != request.session['verifycode']:
+            context = {'info':"验证码错误"}
+            return render(request,"myadmin/index/login.html",context)
         # 根据登录账号获取登录者信息
         user = User.objects.get(username=request.POST['username'])
         # 判断当前用户是否是管理员
-        if user.status ==6:
+        if user.status == 6:
             # 判断登录密码是否相同
             import hashlib
             md5 = hashlib.md5()

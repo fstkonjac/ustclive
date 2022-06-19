@@ -44,6 +44,9 @@ def add(request):
 def insert(request):
     '''执行信息添加'''
     try:
+        if request.POST['password'] != request.POST['repassword']:
+            context = {'info':"两次输入的密码不一致"}
+            return render(request,"myadmin/info.html",context)
         ob = User()
         ob.username = request.POST['username']
         ob.nickname = request.POST['nickname']

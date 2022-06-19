@@ -14,7 +14,7 @@ class ShopMiddleware:
 
         # 判断管理后台是否登录
         # 定义不登录后台也可直接访问的url列表
-        urllist = ['/myadmin/login','/myadmin/dologin','/myadmin/logout','/myadmin/verify']
+        urllist = ['/myadmin/register','/myadmin/doregister','/myadmin/login','/myadmin/dologin','/myadmin/logout','/myadmin/verify']
         # 判断请求地址是否以/myadmin开头，且不在urllist中
         if re.match(r'^/myadmin',path) and (path not in urllist):
         #if (path not in urllist):

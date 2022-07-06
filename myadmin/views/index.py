@@ -52,11 +52,11 @@ def doregister(request):
         context = {'info':"添加成功！"}
     return render(request,"myadmin/index/register.html",context)
 
-# 管理员登录表单
+# 登录表单
 def login(request):
     return render(request,'myadmin/index/login.html')
 
-# 执行管理员登录
+# 执行登录
 def dologin(request):
     try:
         # 执行验证码校验
@@ -76,8 +76,24 @@ def dologin(request):
                 print("登录成功")
                 # 将当前登录成功的用户信息以adminuser为key写入到session中
                 request.session['adminuser'] = user.toDict()
+                # 将当前登录成功的用户信息以generaluser为key写入到session中
+                request.session['generaluser'] = user.toDict()
                 # 重定向到后台管理首页
                 return redirect(reverse('myadmin_index'))
+            else:
+                context = {'info':"登录密码错误"}
+        elif user.status == 1:
+            # 判断登录密码是否相同
+            import hashlib
+            md5 = hashlib.md5()
+            s = request.POST['pass']+user.password_salt # 从表单中获取密码并添加干扰值
+            md5.update(s.encode('utf-8')) # 放入要产生md5的字串
+            if user.password_hash == md5.hexdigest(): # 获取md5值
+                print("登录成功")
+                # 将当前登录成功的用户信息以generaluser为key写入到session中
+                request.session['generaluser'] = user.toDict()
+                # 重定向到前台首页
+                return redirect(reverse('indexacts'))
             else:
                 context = {'info':"登录密码错误"}
         else:
@@ -87,9 +103,13 @@ def dologin(request):
         context = {'info':"登录账号不存在"}
     return render(request,"myadmin/index/login.html",context)
 
-# 管理员退出
+# 退出登录
 def logout(request):
-    del request.session['adminuser']
+    try:
+        del request.session['adminuser']
+    except Exception:
+        pass
+    del request.session['generaluser']
     return redirect(reverse('myadmin_login'))
 
 # 输出验证码

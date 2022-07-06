@@ -26,7 +26,6 @@ from myobject.settings import MEDIA_ROOT
  
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('insertActs/',views.insertActs),
     path('', include('web.urls')),
     path('myact/', include('myact.urls')),
     path('myadmin/', include('myadmin.urls')),

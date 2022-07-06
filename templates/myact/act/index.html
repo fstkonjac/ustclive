@@ -1,0 +1,88 @@
+{% extends 'myact/base.html' %}
+
+{% block main_body %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        活动管理
+        <small>我创建的</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">活动管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">活动信息表</h3>
+
+              <div class="box-tools">
+                <form action="{% url 'myact_act_index' 1 %}" method="get">
+                    <div class="input-group input-group-sm" style="width:150px;">
+                      <input type="text" name="keyword" class="form-control pull-right" placeholder="标题/发起人">
+    
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>活动ID</th>
+                  <th>标题</th>
+                  <th>发起人</th>
+                  <th>电话</th>
+                  <th>添加时间</th>
+                </tr>
+                {% for vo in actlist %}
+                <tr>
+                  <td>{{ vo.id }}</td>
+                  <td>{{ vo.name }}</td>
+                  <td>{{ vo.creator }}</td>
+                  <td>{{ vo.phone }}</td>
+                  <td>{{ vo.addtime|date:'Y-m-d H:i:s' }}</td>
+                  <td>
+                    <a type="button" href="{% url 'myact_act_detail' vo.id %}" class="btn btn-success btn-xs">
+                        <span class="glyphicon glyphicon-square-empty-info" aria-hidden="true"></span> 详情</a>
+                    <a type="button" href="{% url 'myact_act_edit' vo.id %}" class="btn btn-success btn-xs">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑</a>
+                      
+                    <button type="button" onclick="doDel('{% url 'myact_act_delete' vo.id %}')" class="btn btn-danger btn-xs">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除</button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <a role="button" href="{% url 'myact_act_add' %}" class="btn btn-primary">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加活动</a>
+              <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="{% url 'myact_act_index' pIndex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+                {% for p in plist %}
+                <li {% if p == pIndex %}class="active"{% endif %}><a href="{% url 'myact_act_index' p %}?{{mywhere|join:'&'}}">{{p}}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'myact_act_index' pIndex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+
+{% endblock %}
